@@ -91,6 +91,6 @@ app.get('/item/:itemid', function (req, res) {
   });
 });
 
-app.listen(1337, function () {
-  console.log('Example app listening on port 1337!');
+app.listen(3033, function () {
+  console.log('Example app listening on port 3033!');
 });

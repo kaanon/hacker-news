@@ -93,7 +93,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Item = Backbone.Model.extend({
 		url: function () {
-			return 'http://localhost:1337/item/{id}'.replace('{id}', this.get('id'));
+			return 'http://hacker.postgather.com/item/{id}'.replace('{id}', this.get('id'));
 		},
 		load: function () {
 			var that = this;
@@ -585,4 +585,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-//# sourceMappingURL=../hackernews.map?_v=4bcb8c9cc365a0a37c17
+//# sourceMappingURL=../hackernews.map?_v=48c5483a02edc45ea546
