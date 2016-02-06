@@ -34,24 +34,6 @@ var DataViewer = React.createClass({
     // Go to a different page
     changePage: function(newPage){
         this.setState({ page: newPage }); 
-        // return;
-        // var that = this,
-        //     el = ReactDOM.findDOMNode(this);
-        // $(el).slideUp(250, function(){
-        //     that.setState({ page: newPage });    
-        //     setTimeout(function(){
-        //         $(el).slideDown();
-        //     },250);
-        // });
-    },
-
-    loadMore: function(){
-        // NOTE: direct communication with the backbone collection
-        this.props.collection.loadMore();
-
-        var parentElement = ReactDOM.findDOMNode(this).parentNode,
-            topOffset = $(parentElement).offset().top - 60;
-        $('body,html').animate({scrollTop:topOffset + 'px'});
     },
 
     // When the filters are updated, change the state of the component

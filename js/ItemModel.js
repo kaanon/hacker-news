@@ -1,6 +1,6 @@
 var Item = Backbone.Model.extend({
 	url: function(){
-		return 'http://hacker.postgather.com/item/{id}'.replace('{id}',this.get('id'));
+		return 'http://everythingiwrote.com/item/{id}'.replace('{id}',this.get('id'));
 	},
 	load: function(){
 		var that = this;

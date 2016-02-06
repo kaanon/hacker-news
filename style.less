@@ -1,9 +1,11 @@
 @blue: #335; 
+@red: #E75B47;
 body { padding: 0; margin:0; font-family:"Roboto"; color: #252525; background: #fafcfa;}
-
 #news { margin: 20px auto; width: 80%; }
+#news > h1 { font-size: 36px; text-align: center; color: @red; letter-spacing: -2px; }
+
 // article { border: 1px solid #ccc; margin: 10px; float: left; width: 100%; border-radius: 2px; animation:appear 0.2s linear; background:white;}
-article { border: 1px solid #ccc; margin: 0 0 20px; width: 100%; overflow: auto; box-sizing: border-box;background:white;
+article { border: 1px solid #bbb; margin: 0 0 24px; width: 100%; overflow: auto; box-sizing: border-box;background:white;
 	 animation:dogdoor 1.25s ease 0s forwards; perspective: 1000; -webkit-transform:rotateX(90deg); 
 	 -webkit-transform-origin:top center 0;
 	}
@@ -12,7 +14,7 @@ article h1 a { color: @blue; }
 article h2 { font-size: 12px; color: #888;  margin: 0 0 20px;}
 article h2 strong { font-size: 18px; line-height: inherit; padding-left: 20px;}
 
-article img { float: left; width: 25%; max-width: 25%; margin: 10px; }
+article img { float: left; width: 25%; max-width: 25%; margin: 12px; }
 article div { padding: 10px; width: 100%; text-align: center;}
 article a + div { float: left; width: 65%; text-align: left;}
 article p { font-size: 16px; }
@@ -55,8 +57,8 @@ article p { font-size: 16px; }
 // Filter Navigation
 .filters nav { border-top: 1px solid #ccc; margin-top: 20px; padding-top: 20px; clear:both; color:#999; line-height: 28px;}
 .filters nav label { margin-right: 20px;}
-.filters nav a { display: inline-block; height: 28px; line-height: 28px; padding: 0 10px; margin: 0 6px 6px 0; border: 1px solid; color:@blue; border-radius:3px; cursor:pointer;background:white;}
-.filters nav a.active { background:@blue; color: white;}
+.filters nav a { display: inline-block; height: 28px; line-height: 28px; padding: 0 10px; margin: 0 6px 6px 0; border: 1px solid; color:@blue; border-radius:3px; cursor:pointer;background:white;transition:transform 0.4s cubic-bezier(.17,.67,.54,1);}
+.filters nav a.active { background:@red; color: white; transform: scale(1.05);-webkit-transform:translateY(-5px); }
 .filters nav a[disabled] { color: #CCC; border-color:#ccc;}
 .filters select.sort { float: right; display: inline-block; height: 28px; line-height: 28px; padding: 0 10px; margin: 0 6px 6px 0; border: 1px solid; color:@blue; border-radius:3px; cursor:pointer;background:white;}
 
@@ -66,3 +68,9 @@ article p { font-size: 16px; }
 .pagination a.disabled { color: #ccc; cursor: auto}        
 .pagination a.previous { float: left; }
 .pagination a.next { float: right; }
+
+@media screen and (max-width:1024px){
+	#news { width: 96%; }
+	article img { width: 90%; max-width: 90%; display:block; float:none; margin: 10px auto 10px; }
+	article a + div { width: 100%; float:none;}
+}

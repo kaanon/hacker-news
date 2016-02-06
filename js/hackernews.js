@@ -93,7 +93,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Item = Backbone.Model.extend({
 		url: function () {
-			return 'http://hacker.postgather.com/item/{id}'.replace('{id}', this.get('id'));
+			return 'http://everythingiwrote.com/item/{id}'.replace('{id}', this.get('id'));
 		},
 		load: function () {
 			var that = this;
@@ -135,8 +135,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	// var Pagination = require('./pagination.jsx');
 	var List = __webpack_require__(5);
-	var Pagination = __webpack_require__(6);
-	var Filters = __webpack_require__(7);
+	var Pagination = __webpack_require__(7);
+	var Filters = __webpack_require__(8);
 	
 	var DataViewer = React.createClass({
 	    displayName: 'DataViewer',
@@ -168,24 +168,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Go to a different page
 	    changePage: function changePage(newPage) {
 	        this.setState({ page: newPage });
-	        // return;
-	        // var that = this,
-	        //     el = ReactDOM.findDOMNode(this);
-	        // $(el).slideUp(250, function(){
-	        //     that.setState({ page: newPage });   
-	        //     setTimeout(function(){
-	        //         $(el).slideDown();
-	        //     },250);
-	        // });
-	    },
-	
-	    loadMore: function loadMore() {
-	        // NOTE: direct communication with the backbone collection
-	        this.props.collection.loadMore();
-	
-	        var parentElement = ReactDOM.findDOMNode(this).parentNode,
-	            topOffset = $(parentElement).offset().top - 60;
-	        $('body,html').animate({ scrollTop: topOffset + 'px' });
 	    },
 	
 	    // When the filters are updated, change the state of the component
@@ -252,7 +234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * The list of items
 	 */
-	var Item = __webpack_require__(9);
+	var Item = __webpack_require__(6);
 	var List = React.createClass({
 	    displayName: 'List',
 	
@@ -272,222 +254,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Pagination View
-	 *
-	 * A single note within a list of notes.
-	 */
-	
-	var Pagination = React.createClass({
-	    displayName: 'Pagination',
-	
-	    // Go to the previous page
-	    prevPage: function prevPage() {
-	        if (this.props.page - 1 > 0) {
-	            this.props.changePage(this.props.page - 1);
-	        }
-	    },
-	
-	    // Go to the next page
-	    nextPage: function nextPage() {
-	        if (this.props.page + 1 <= this.props.numPages) {
-	            this.props.changePage(this.props.page + 1);
-	        }
-	    },
-	
-	    render: function render() {
-	        // The data attributes for the <figure> tags are for the circleProgess plugin
-	        return React.createElement(
-	            'div',
-	            { className: 'pagination' },
-	            React.createElement(
-	                'a',
-	                { onClick: this.prevPage, className: 'previous' + (this.props.page <= 1 ? ' disabled' : '') },
-	                'Previous Page'
-	            ),
-	            React.createElement(
-	                'span',
-	                null,
-	                'Page ',
-	                this.props.page,
-	                ' of ',
-	                this.props.numPages
-	            ),
-	            React.createElement(
-	                'a',
-	                { onClick: this.nextPage, className: 'next' + (this.props.page >= this.props.numPages ? ' disabled' : '') },
-	                'Next Page'
-	            )
-	        );
-	    }
-	});
-	
-	module.exports = Pagination;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	/**
-	 * Filters View
-	 */
-	var nicename = function nicename(str) {
-	    str = str.replace(/-/, ' ').toLowerCase();
-	    return str.replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g, function (s) {
-	        return s.toUpperCase();
-	    });
-	};
-	var Sort = __webpack_require__(8);
-	var Filters = React.createClass({
-	    displayName: 'Filters',
-	
-	    /**
-	     * Click handler for changing the filter
-	     * @method changeFilter
-	     * @param  {Event}     evt  
-	     * @return {[type]}
-	     */
-	    changeFilter: function changeFilter(evt) {
-	        var filter = $(evt.currentTarget).data('filter');
-	
-	        // Communicate with the parent component to update the filter
-	        this.props.updateFilter({ filter: filter });
-	    },
-	    onUpdateSort: function onUpdateSort(sort) {
-	        this.props.collection.comparator = function (model) {
-	            return -model.get(sort);
-	        };
-	        this.props.collection.sort();
-	        this.props.updateFilter({ page: 1 });
-	    },
-	
-	    render: function render() {
-	        var navElements = [],
-	            navOptions = [],
-	            filterTitle,
-	            filterCount,
-	            filterClassName;
-	
-	        // This is for displaying the options you can filter by
-	        var filters = this.props.collection.groupBy(this.props.filterBy);
-	        for (var filterKey in filters) {
-	            filterTitle = nicename(filterKey);
-	            filterCount = filters[filterKey].length;
-	            filterClassName = this.props.filter === filterKey ? 'active' : '';
-	
-	            navElements.push(React.createElement(
-	                'a',
-	                { key: filterKey, onClick: this.changeFilter, className: filterClassName, 'data-filter': filterKey },
-	                filterTitle,
-	                ' ',
-	                React.createElement(
-	                    'strong',
-	                    null,
-	                    filterCount
-	                )
-	            ));
-	        }
-	
-	        return React.createElement(
-	            'section',
-	            { className: 'filters' },
-	            React.createElement(
-	                'nav',
-	                null,
-	                React.createElement(
-	                    'label',
-	                    null,
-	                    'Filter :'
-	                ),
-	                React.createElement(
-	                    'a',
-	                    { onClick: this.changeFilter, className: this.props.filter === 'all' ? 'active' : '', 'data-filter': 'all' },
-	                    'All ',
-	                    React.createElement(
-	                        'strong',
-	                        null,
-	                        this.props.collection.length
-	                    )
-	                ),
-	                navElements,
-	                React.createElement(Sort, { collection: this.props.collection, updateSort: this.onUpdateSort })
-	            )
-	        );
-	    }
-	});
-	
-	module.exports = Filters;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Filters View
-	 */
-	var nicename = function nicename(str) {
-	    str = str.replace(/-/, ' ').toLowerCase();
-	    return str.replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g, function (s) {
-	        return s.toUpperCase();
-	    });
-	};
-	
-	var Filters = React.createClass({
-	    displayName: 'Filters',
-	
-	    /**
-	     * Click handler for changing the filter
-	     * @method changeFilter
-	     * @param  {Event}     evt  
-	     * @return {[type]}
-	     */
-	    changeSort: function changeSort(evt) {
-	        var sort = $(evt.currentTarget).val();
-	        // Communicate with the parent component to update the filter
-	        this.props.updateSort(sort);
-	    },
-	
-	    render: function render() {
-	        var navElements = [],
-	            navOptions = [],
-	            filterTitle,
-	            filterCount,
-	            filterClassName;
-	
-	        // This is for displaying the options you can filter by
-	        var options = ['numComments', 'score', 'time'].map(function (sort) {
-	            return React.createElement(
-	                'option',
-	                { key: sort },
-	                sort
-	            );
-	        });
-	
-	        return React.createElement(
-	            'select',
-	            { className: 'sort', onChange: this.changeSort },
-	            React.createElement(
-	                'option',
-	                null,
-	                '--sorting'
-	            ),
-	            options
-	        );
-	    }
-	});
-	
-	module.exports = Filters;
-
-/***/ },
-/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -581,8 +347,224 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Item;
 
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Pagination View
+	 *
+	 * A single note within a list of notes.
+	 */
+	
+	var Pagination = React.createClass({
+	    displayName: 'Pagination',
+	
+	    // Go to the previous page
+	    prevPage: function prevPage() {
+	        if (this.props.page - 1 > 0) {
+	            this.props.changePage(this.props.page - 1);
+	        }
+	    },
+	
+	    // Go to the next page
+	    nextPage: function nextPage() {
+	        if (this.props.page + 1 <= this.props.numPages) {
+	            this.props.changePage(this.props.page + 1);
+	        }
+	    },
+	
+	    render: function render() {
+	        // The data attributes for the <figure> tags are for the circleProgess plugin
+	        return React.createElement(
+	            'div',
+	            { className: 'pagination' },
+	            React.createElement(
+	                'a',
+	                { onClick: this.prevPage, className: 'previous' + (this.props.page <= 1 ? ' disabled' : '') },
+	                'Previous Page'
+	            ),
+	            React.createElement(
+	                'span',
+	                null,
+	                'Page ',
+	                this.props.page,
+	                ' of ',
+	                this.props.numPages
+	            ),
+	            React.createElement(
+	                'a',
+	                { onClick: this.nextPage, className: 'next' + (this.props.page >= this.props.numPages ? ' disabled' : '') },
+	                'Next Page'
+	            )
+	        );
+	    }
+	});
+	
+	module.exports = Pagination;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	/**
+	 * Filters View
+	 */
+	var nicename = function nicename(str) {
+	    str = str.replace(/-/, ' ').toLowerCase();
+	    return str.replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g, function (s) {
+	        return s.toUpperCase();
+	    });
+	};
+	var Sort = __webpack_require__(9);
+	var Filters = React.createClass({
+	    displayName: 'Filters',
+	
+	    /**
+	     * Click handler for changing the filter
+	     * @method changeFilter
+	     * @param  {Event}     evt  
+	     * @return {[type]}
+	     */
+	    changeFilter: function changeFilter(evt) {
+	        var filter = $(evt.currentTarget).data('filter');
+	
+	        // Communicate with the parent component to update the filter
+	        this.props.updateFilter({ filter: filter });
+	    },
+	    onUpdateSort: function onUpdateSort(sort) {
+	        this.props.collection.comparator = function (model) {
+	            return -model.get(sort);
+	        };
+	        this.props.collection.sort();
+	        this.props.updateFilter({ page: 1 });
+	    },
+	
+	    render: function render() {
+	        var navElements = [],
+	            navOptions = [],
+	            filterTitle,
+	            filterCount,
+	            filterClassName;
+	
+	        // This is for displaying the options you can filter by
+	        var filters = this.props.collection.groupBy(this.props.filterBy);
+	        for (var filterKey in filters) {
+	            filterTitle = nicename(filterKey);
+	            filterCount = filters[filterKey].length;
+	            filterClassName = this.props.filter === filterKey ? 'active' : '';
+	
+	            navElements.push(React.createElement(
+	                'a',
+	                { key: filterKey, onClick: this.changeFilter, className: filterClassName, 'data-filter': filterKey },
+	                filterTitle,
+	                ' ',
+	                React.createElement(
+	                    'strong',
+	                    null,
+	                    filterCount
+	                )
+	            ));
+	        }
+	
+	        return React.createElement(
+	            'section',
+	            { className: 'filters' },
+	            React.createElement(
+	                'nav',
+	                null,
+	                React.createElement(
+	                    'label',
+	                    null,
+	                    'Filter :'
+	                ),
+	                React.createElement(
+	                    'a',
+	                    { onClick: this.changeFilter, className: this.props.filter === 'all' ? 'active' : '', 'data-filter': 'all' },
+	                    'All ',
+	                    React.createElement(
+	                        'strong',
+	                        null,
+	                        this.props.collection.length
+	                    )
+	                ),
+	                navElements,
+	                React.createElement(Sort, { collection: this.props.collection, updateSort: this.onUpdateSort })
+	            )
+	        );
+	    }
+	});
+	
+	module.exports = Filters;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Filters View
+	 */
+	var nicename = function nicename(str) {
+	    str = str.replace(/-/, ' ').toLowerCase();
+	    return str.replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g, function (s) {
+	        return s.toUpperCase();
+	    });
+	};
+	
+	var Filters = React.createClass({
+	    displayName: 'Filters',
+	
+	    /**
+	     * Click handler for changing the filter
+	     * @method changeFilter
+	     * @param  {Event}     evt  
+	     * @return {[type]}
+	     */
+	    changeSort: function changeSort(evt) {
+	        var sort = $(evt.currentTarget).val();
+	        // Communicate with the parent component to update the filter
+	        this.props.updateSort(sort);
+	    },
+	
+	    render: function render() {
+	        var navElements = [],
+	            navOptions = [],
+	            filterTitle,
+	            filterCount,
+	            filterClassName;
+	
+	        // This is for displaying the options you can filter by
+	        var options = ['numComments', 'score', 'time'].map(function (sort) {
+	            return React.createElement(
+	                'option',
+	                { key: sort },
+	                sort
+	            );
+	        });
+	
+	        return React.createElement(
+	            'select',
+	            { className: 'sort', onChange: this.changeSort },
+	            React.createElement(
+	                'option',
+	                null,
+	                '--sorting'
+	            ),
+	            options
+	        );
+	    }
+	});
+	
+	module.exports = Filters;
+
 /***/ }
 /******/ ])
 });
 ;
-//# sourceMappingURL=../hackernews.map?_v=48c5483a02edc45ea546
+//# sourceMappingURL=../hackernews.map?_v=1a60b8b9ff9e55e53604
